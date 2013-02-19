@@ -1,4 +1,4 @@
-#
+# vim: ft=ruby
 # Cookbook Name:: aws
 # Recipe:: default
 #
@@ -17,8 +17,15 @@
 # limitations under the License.
 #
 
+right_aws_gem_file = cookbook_file "#{Chef::Config[:file_cache_path]}/right_aws-3.0.4.gem" do
+  action :nothing
+  source 'right_aws-3.0.4.gem'
+end
+
+right_aws_gem_file.run_action(:create)
+
 chef_gem "right_aws" do
-  version node['aws']['right_aws_version']
+  source "#{Chef::Config[:file_cache_path]}/right_aws-3.0.4.gem"
   action :install
 end
 

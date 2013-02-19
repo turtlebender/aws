@@ -1,3 +1,4 @@
+# vim: ft=ruby
 # TODO: once sync_libraries properly handles sub-directories, move this file to aws/libraries/opscode/aws/ec2.rb
 
 begin
@@ -26,7 +27,11 @@ module Opscode
       def ec2
         region = instance_availability_zone
         region = region[0, region.length-1]
-        @@ec2 ||= RightAws::Ec2.new(new_resource.aws_access_key, new_resource.aws_secret_access_key, { :logger => Chef::Log, :region => region })
+        options = { :logger => Chef::Log, :region => region }
+        if new_resource.aws_security_token
+          options[:token] = new_resource.aws_security_token
+        end
+        @@ec2 ||= RightAws::Ec2.new(new_resource.aws_access_key, new_resource.aws_secret_access_key, options)
       end
 
       def instance_id
